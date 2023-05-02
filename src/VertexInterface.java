@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.List;
 
 public interface VertexInterface<T> {
     
@@ -74,6 +75,14 @@ public interface VertexInterface<T> {
     boolean disconnect(VertexInterface<T> endVertex);
     
     /**
+     * Disconnect all related edges of the vertex
+     * 
+     * @param endVertex
+     * @return
+     */
+    void disconnectAll(VertexInterface<T> endVertex);
+    
+    /**
      * creates an iterator of this vertex's neighbors by 
      * following all edges that begin at this vertex.
      * @return
@@ -121,5 +130,7 @@ public interface VertexInterface<T> {
      * @return
      */
     double getCost();
+    
+    List<Edge<T>> getEdges();
 
 }

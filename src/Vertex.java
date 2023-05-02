@@ -213,5 +213,19 @@ public class Vertex<T> implements VertexInterface<T> {
     public double getCost() {
         return cost;
     }
+
+    @Override
+    public void disconnectAll(VertexInterface<T> endVertex) {
+        for (Edge<T> edge : edgeList) {
+            if (edge.getEnd().equals(endVertex)) {
+                edgeList.remove(edge);
+            }
+        }
+    }
+
+    @Override
+    public List<Edge<T>> getEdges() {
+        return edgeList;
+    }
     
 }
