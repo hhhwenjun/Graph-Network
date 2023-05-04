@@ -199,7 +199,7 @@ public class Graph<T> implements GraphInterface<T> {
             VertexInterface<T> current = queue.poll(); // Get the vertex with the smallest
                                       // distance
             current.visit();
-            if (current.equals(destination)) {
+            if (current.getLabel().equals(destination)) {
                 // Found the destination vertex, so construct the path stack
                 constructPath(origin, destination, previousVertices, path);
                 return distances.get(destination);

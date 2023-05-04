@@ -216,9 +216,10 @@ public class Vertex<T> implements VertexInterface<T> {
 
     @Override
     public void disconnectAll(VertexInterface<T> endVertex) {
-        for (Edge<T> edge : edgeList) {
-            if (edge.getEnd().getLabel().equals(endVertex.getLabel())) {
-                edgeList.remove(edge);
+        if (edgeList.isEmpty()) return;
+        for (int i = 0; i < edgeList.size(); i++) {
+            if (edgeList.get(i).getEnd().getLabel().equals(endVertex.getLabel())) {
+                edgeList.remove(i);
             }
         }
     }
