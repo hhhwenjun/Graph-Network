@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class VTConnect {
     
@@ -17,10 +18,14 @@ public class VTConnect {
     }
     
     public boolean createFriendship(Profile a, Profile b) {
+        a.addFriend(b);
+        b.addFriend(a);
         return graph.addEdge(a, b);
     }
     
     public boolean removeFriendship(Profile a, Profile b) {
+        a.unFriend(b);
+        b.unFriend(a);
         return graph.removeEdge(a, b);
     }
     
@@ -46,8 +51,33 @@ public class VTConnect {
     }
     
     public List<Profile> friendSuggestion(Profile user){
+        List<Profile> potentialFriends = new ArrayList<>();
+        
+        List<VertexInterface<Profile>> currFriends = new ArrayList<>();
+        Set<Profile> potentialFriendSet = new HashSet<>();
         VertexInterface<Profile> currUser = graph.getVertices().get(user);
-        currUser.getUnvisitedNeighbor();
+        Iterator<VertexInterface<Profile>> it = currUser.getNeighborIterator();
+        while(it.hasNext()) {
+            currFriends.add(it.next());
+        }
+        Set<Profile> currFriendSet = currFriends.stream().map(VertexInterface<Profile>::getLabel).collect(Collectors.toSet());
+        for (VertexInterface<Profile> friend : currFriends) {
+            Iterator<VertexInterface<Profile>> curr = friend.getNeighborIterator();
+            while(curr.hasNext()) {
+                VertexInterface<Profile> potentialFriend = curr.next();
+                if (!currFriendSet.contains(potentialFriend.getLabel()) &&
+                    !potentialFriendSet.contains(potentialFriend.getLabel())) {
+                    potentialFriends.add(potentialFriend.getLabel());
+                    potentialFriendSet.add(potentialFriend.getLabel());
+                }
+            }
+        }
+        return potentialFriends;
+    }
+    
+    public int friendshipDistance(Profile a, Profile b) {
+        return graph.getShortestPath(a, b, new Stack<Profile>()) == Integer.MAX_VALUE ? -1 
+            : graph.getShortestPath(a, b, new Stack<Profile>());
     }
 
 }

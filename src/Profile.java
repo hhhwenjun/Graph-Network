@@ -62,7 +62,7 @@ public class Profile {
     
     public String toString() {
         return "Name: " + name + "\n\tEmail: " + email + 
-            "\n\tStatus: " + status + "\n\tNumber of friend profiles: " + friendProfiles.size() + "\n";
+            "\n\tStatus: " + status + "\n\tNumber of friend profiles: " + friendProfiles.size();
     }
 
     public void addFriend(Profile user) {
@@ -81,6 +81,10 @@ public class Profile {
     
     public void display() {
         System.out.println(this.toString());
-        friendProfiles.stream().map(Profile::toString).forEach(System.out::println);
+        System.out.println("Friends:");
+        for (Profile friend : friendProfiles) {
+            System.out.println("\t" + friend.getName());
+        }
+        System.out.println("");
     }
 }

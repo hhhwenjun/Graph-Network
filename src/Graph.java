@@ -68,26 +68,7 @@ public class Graph<T> implements GraphInterface<T> {
 
     @Override
     public boolean addEdge(T begin, T end) {
-        VertexInterface<T> beginVertex = null;
-        VertexInterface<T> endVertex = null;
-        // key not found
-        if (!vertices.containsKey(begin) || !vertices.containsKey(end)) return false;
-        
-        for (Map.Entry<T, VertexInterface<T>> entry : vertices.entrySet()) {
-            if (entry.getKey().equals(begin)) {
-                beginVertex = entry.getValue();
-            }
-            if (entry.getKey().equals(end)) {
-                endVertex = entry.getValue();
-            }
-        }
-        
-        if (beginVertex.connect(endVertex) && endVertex.connect(beginVertex)) {
-            edgeNum++;
-            return true;
-        }
-        
-        return false;
+        return addEdge(begin, end, 1.0);
     }
 
 
@@ -117,25 +98,7 @@ public class Graph<T> implements GraphInterface<T> {
 
     @Override
     public boolean removeEdge(T begin, T end) {
-        VertexInterface<T> beginVertex = null;
-        VertexInterface<T> endVertex = null;
-        // key not found
-        if (!vertices.containsKey(begin) || !vertices.containsKey(end)) return false;
-        
-        for (Map.Entry<T, VertexInterface<T>> entry : vertices.entrySet()) {
-            if (entry.getKey().equals(begin)) {
-                beginVertex = entry.getValue();
-            }
-            if (entry.getKey().equals(end)) {
-                endVertex = entry.getValue();
-            }
-        }
-        
-        if (beginVertex.disconnect(endVertex) && endVertex.disconnect(beginVertex)) {
-            edgeNum--;
-            return true;
-        }
-        return false;
+        return removeEdge(begin, end, 1.0);
     }
 
 
@@ -220,8 +183,8 @@ public class Graph<T> implements GraphInterface<T> {
 
         // Create a priority queue to store vertices to visit, using a
         // comparator to prioritize based on distance
-        PriorityQueue<VertexInterface<T>> queue = new PriorityQueue<>(Comparator.comparingInt(
-            distances::get));
+        PriorityQueue<VertexInterface<T>> queue = new PriorityQueue<>((a, b) -> 
+        distances.get(a.getLabel()) - distances.get(b.getLabel()));
         // Initialize distances and previousVertices
         for (VertexInterface<T> vertex : vertices.values()) {
             distances.put(vertex.getLabel(), Integer.MAX_VALUE);
@@ -245,7 +208,7 @@ public class Graph<T> implements GraphInterface<T> {
             // Visit each neighbor of the current vertex
             for (Edge<T> edge : current.getEdges()) {
                 if (edge.getEnd().isVisited()) continue;
-                int distance = (int)(distances.get(current) + edge.getWeight());
+                int distance = (int)(distances.get(current.getLabel()) + edge.getWeight());
 
                 // Update the distance and previous vertex if a shorter path is
                 // found
